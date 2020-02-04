@@ -43,3 +43,8 @@ vignettes/*.pdf
 
 # Processed data files
 /processed_data
+
+# DS store
+*.DS_Store
+
+
