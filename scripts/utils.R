@@ -91,3 +91,75 @@ add_game_stats <- function(df, team) {
       ypp_opp = (ry_opp + py_opp) / opp_pts
     )
 }
+
+####### Functions for create_stats_ranks_dataset.R ########
+get_team_rank_stats <- function(df) {
+  df %>%
+    group_by(team) %>%
+    transmute(
+      f1d_tm = rfd_tm + pfd_tm + ifd_tm,
+      f1d_opp = rfd_opp + pfd_opp + ifd_opp,
+      tovrtds_tm = tdt_tm,
+      tovrtds_opp = tdt_opp,
+      top_tm = (top_tm / 60),
+      top_opp = (top_opp / 60),
+      fgm_tm,
+      fgm_opp,
+      td_tm,
+      td_opp
+    ) %>%
+    summarise_all(mean) %>%
+    ungroup()
+}
+# Helper function to turn stats to ranks
+get_ranks <- function(df) {
+  # helper function to flip ranking
+  rev_rank <- function(x) {
+    min_rank(desc(x))
+  }
+  tm_stats_rank <-
+    c('f1d_tm', 'tovrtds_tm', 'top_tm', 'fgm_tm', 'td_tm')
+  opp_stats_rank <-
+    c('f1d_opp', 'tovrtds_opp', 'top_opp', 'fgm_opp', 'td_opp')
+  
+  df %>%
+    mutate_at(vars(tm_stats_rank), rev_rank) %>%
+    mutate_at(vars(opp_stats_rank), min_rank) %>%
+    set_names(c('team', paste0(names(.)[-1], '_rank')))
+}
+
+####### Functions for create_big_four_stats_dataset #######
+get_big_four_stats <- function(df, max_season){
+  df %>% 
+  filter(seas >= max_season - 5, wk < 18) %>% 
+  group_by(team, seas) %>% 
+    summarise_at(.vars = vars(pts_tm:fgy_opp, -opp),
+                 .funs = mean) %>% 
+    select(seas, team, 
+           pts_tm, pts_opp, 
+           py_tm, py_opp, 
+           ry_tm, ry_opp) %>% 
+    mutate(ypp_tm = (ry_tm + py_tm)/pts_tm,
+           ypp_opp = (ry_opp + py_opp)/pts_opp)
+  
+}
+get_big_four_ranks <- function(df, last_season){
+  df %>% 
+    filter(seas == last_season) %>% 
+    left_join(
+      df %>% 
+        ungroup() %>% 
+        filter(seas == last_season) %>% 
+        mutate_at(.vars = vars(-team), .funs = min_rank) %>%
+        select(-seas),
+      by = 'team',
+      suffix = c('_stat', '_rank')
+    ) %>% 
+    mutate(
+      pts_tm_rank = 33 - pts_tm_rank,
+      py_tm_rank = 33 - py_tm_rank,
+      ry_tm_rank = 33 - ry_tm_rank,
+      ypp_opp_rank = 33 - ypp_opp_rank
+    ) %>% 
+    ungroup()
+}

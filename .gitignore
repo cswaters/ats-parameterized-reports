@@ -40,3 +40,6 @@ vignettes/*.pdf
 
 # Raw data files
 /raw_data
+
+# Processed data files
+/processed_data
