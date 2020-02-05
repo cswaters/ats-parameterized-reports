@@ -163,3 +163,11 @@ get_big_four_ranks <- function(df, last_season){
     ) %>% 
     ungroup()
 }
+
+
+####### from update_team_details.R ######
+make_img_path <- function(name){
+  glue::glue(
+    'nfl_logos/{tname}_logo.png',
+    tname=str_replace_all(name, ' ', '_'))
+}
