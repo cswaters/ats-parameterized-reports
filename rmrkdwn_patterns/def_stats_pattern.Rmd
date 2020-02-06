@@ -1,0 +1,21 @@
+## Defensive Stats
+
+### Avg Points Allowed per Quarter 
+
+```{r pts_per_qtr_def, echo=FALSE}
+tmp_def <- team_df %>% 
+    select(team, seas, q1p_tm:q4p_tm, q1p_opp:q4p_opp) %>% 
+    gather(qtr, scr, -team, -seas) %>% 
+    group_by(seas, qtr) %>% 
+    summarise(scr = mean(scr)) %>% 
+    ungroup() %>% 
+    separate(qtr, into = c('qtr', 'who'), sep = '_') %>% 
+    mutate(qtr = factor(qtr, 
+                        levels = c('q1p','q2p','q3p','q4p'),
+                        labels = c('Q1','Q2','Q3','Q4'))) %>% 
+    filter(who == 'opp') 
+
+point_qtr_dist(tmp_def, tm_pal)
+```
+
+`r mk_def_tbl(big_four_team)`

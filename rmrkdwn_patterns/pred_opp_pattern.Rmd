@@ -1,0 +1,11 @@
+
+
+## Predictive Opponent Stats
+
+```{r pred_opp_stats, echo=FALSE, warning=FALSE, message=FALSE}
+clean_up_ranks(rank_data, params$team) %>% 
+make_rank_table(proper_stat_names, 
+                type = 'opp') %>%
+  kable(align = 'c')
+```
+

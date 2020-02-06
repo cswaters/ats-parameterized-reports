@@ -1,0 +1,16 @@
+
+```{r logo, echo=FALSE, out.width = "40%"}
+include_graphics(details$logo)
+```
+
+## Team Info
+
+| |
+| --- | ---
+|Team | `r details$name`
+|Conference |  `r details$conf`
+|Division |  `r details$div`
+|Stadium |  `r details$stad`
+|`r year(today())` Coach | `r details$coach`
+
+`r get_team_rank_article(details, big_four_team)`

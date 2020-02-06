@@ -1,0 +1,31 @@
+
+## Team Performance vs ATS & OU Lines
+
+```{r ats_ou_scatter_plot, echo=FALSE}
+p1 <- sprd_vs_mov_plot(team_df, tm_pal) +
+  labs(subtitle = 'Point Spread vs MOV')
+p2 <- tot_vs_score_plot(team_df, tm_pal) +
+  labs(subtitle = 'O/U vs Final Score')
+
+p1 + p2
+```
+
+## ATS Records by Location
+
+```{r by_location_ats, echo=FALSE}
+location_ats_tbl(team_df) %>% 
+  kable(align = 'c')
+```
+
+## Weekly Performance ATS by Week
+
+```{r by_wk_heatmap, echo=FALSE}
+week_heatmap_plot(team_df, tm_pal)
+```
+
+## Team Scoring Last 10 Seasons
+
+```{r ppg_plot, echo=FALSE}
+make_ppg_plot(team_df, tm_pal) +
+  labs(subtitle = 'Team and Opponent Avg Points Scored per Game')
+```

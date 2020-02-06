@@ -1,0 +1,25 @@
+## Past 10 Seasons ATS vs All Opponents
+
+*All results for the regular season only.*
+
+```{r five_yr_rslts, echo=FALSE}
+team_df %>% 
+  filter(wk <= 17) %>% 
+  make_results_tbl() %>% 
+  kable(align = 'c')
+```
+
+```{r su_results_plot, echo=FALSE}
+make_results_plot(ats, tm_pal, 'su', bet_types$su) +
+  labs(subtitle = 'Regular Season Results')
+```
+
+```{r ats_results_plot, echo=FALSE}
+make_results_plot(ats, tm_pal, 'ats', bet_types$ats) +
+  labs(subtitle = 'ATS Results')
+```
+
+```{r ou_results_plot, echo=FALSE}
+make_results_plot(ats, tm_pal, 'ou', bet_types$ou) +
+  labs(subtitle = 'Over/Under Results')
+```

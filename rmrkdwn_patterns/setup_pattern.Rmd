@@ -1,0 +1,70 @@
+---
+params:
+  team: ATL
+  set_title: Atlanta Falcons
+title: "`r params$set_title`"
+output:
+  tufte::tufte_html: default
+---
+
+```{r setup, include=FALSE}
+source('load_libs.R')
+theme_set(theme_ipsum_rc())
+update_geom_font_defaults(font_rc_light)
+options(htmltools.dir.version = FALSE)
+opts_chunk$set(fig.retina=2)
+```
+
+```{r load_files, include=FALSE}
+source('load_libs.R')
+source('scripts/utils.R')
+
+input_stats <- 'processed_data/stats_10y_seas.rds'
+input_details <- 'processed_data/team_information.rds'
+input_bigfour <- 'processed_data/big_four_ranks.rds'
+input_ranks <- 'processed_data/nfl-2018-stats-ranks.rds'
+
+
+# team_filter <- partial(.f = filter, team == params$team)
+
+team_df <- read_rds(input_stats) %>% 
+  filter(team == params$team)
+  # filter(team == 'MIA')
+details <- read_rds(input_details) %>% 
+  filter(abrv == params$team)
+  
+tm_pal <- details %>% 
+  pull(colors) %>% 
+  unlist()
+
+big_four_team <- read_rds(input_bigfour) %>% 
+  filter(team == params$team)
+rank_data <- read_rds(input_ranks)
+
+
+ats <- make_regseas_ats_sum_tbl(team_df)
+last_seas <- max(team_df$seas)
+bet_types <- list(su = c('W','L','P'),
+                  ats = c('W','L','P'),
+                  ou = c('O', 'U', 'P'))
+proper_stat_names <- tibble(
+    stat = c('f1d', 'fgm', 'td', 'top', 'tovrtds'),
+    statistic = c(
+      'FirstDowns',
+      'FieldGoals',
+      'TouchDowns',
+      'TimeOfPoss',
+      'TDsOffTurnovrs'
+    )
+  )
+
+vs_div <- team_df %>% 
+  get_div_games() %>% 
+  sum_up_records()
+vs_conf <- team_df %>% 
+  get_conf_games() %>% 
+  sum_up_records()
+ats <- make_regseas_ats_sum_tbl(team_df)
+home_away_records <- get_location_records(team_df, last_seas)
+```
+

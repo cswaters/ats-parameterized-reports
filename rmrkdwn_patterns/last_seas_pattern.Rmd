@@ -1,0 +1,13 @@
+
+## `r last_seas` Schedule and Results
+
+```{r seas_schd, echo=FALSE}
+team_df %>% 
+  get_schd(last_seas) %>% 
+  kable(align = 'c')
+```
+
+
+`r in_close_games(filter(team_df, seas == '2018'), details)`
+`r pythag_proj_txt(team_df, details)`
+

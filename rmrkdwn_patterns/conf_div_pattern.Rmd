@@ -1,0 +1,34 @@
+
+## Conference and Division Records
+
+Over the last five seasons, the `r details$name` are `r make_team_records(vs_conf$su_w, vs_conf$su_l, vs_conf$su_p)` against conference opponents and `r make_team_records(vs_div$su_w, vs_div$su_l, vs_div$su_p)` vs division opponents. 
+
+### vs Division Opponents ATS by Team
+
+```{r conf_div_tbl, echo=FALSE}
+team_df %>% 
+  get_div_games() %>% 
+  group_by(opp) %>% 
+  sum_up_records() %>% 
+  ungroup() %>% 
+  div_results_tbl() %>% 
+  kable(align = 'c')
+```
+
+### `r details$conf` Games
+
+```{r conf_game_ats, echo=FALSE}
+team_df %>% 
+  get_conf_games() %>% 
+  make_results_tbl() %>% 
+  kable(align = 'c')
+```
+
+### `r paste(details$conf, details$div)` Games
+
+```{r div_games_ats, echo=FALSE}
+team_df %>% 
+  get_div_games() %>% 
+  make_results_tbl() %>% 
+  kable(align = 'c')
+```

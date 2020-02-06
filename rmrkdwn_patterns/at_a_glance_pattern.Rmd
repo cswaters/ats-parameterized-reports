@@ -1,0 +1,8 @@
+
+## `r max(team_df$seas)` Season at a Glance
+
+In `r as.character(max(team_df$seas))` the `r details$name`:
+
+`r season_bullet_points(details, home_away_records)`
+
+

@@ -1,6 +1,4 @@
-library(dplyr)
-library(tidyr)
-
+source('load_libs.R')
 source('scripts/utils.R')
 
 team <- vroom::vroom('raw_data/team.csv')
@@ -17,7 +15,7 @@ neutral_stadiums <- c(
 
 league <- mk_last10_dataset(game, neutral_stadiums) %>%
   fix_teams() %>%
-  add_ats_grades() %>%
+  add_ats_grades() %>% 
   add_game_details(game_details)
 
 league %>%
