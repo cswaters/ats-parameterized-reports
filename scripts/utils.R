@@ -602,7 +602,7 @@ mk_def_tbl <- function(big_four_team) {
     kable()
 }
 
-pt_diff_plot <- function(df, team_abrv, pal) {
+pt_diff_plot <- function(df, team_info, team_abrv, pal) {
   #
   df %>%
     select(seas, wk, team, q1p_tm:q4p_opp) %>%
@@ -612,7 +612,7 @@ pt_diff_plot <- function(df, team_abrv, pal) {
       q3_diff = q3p_tm - q3p_opp,
       q4_diff = q4p_tm - q4p_opp
     ) %>%
-    left_join(details, by = c('team' = 'abrv')) %>%
+    left_join(team_info, by = c('team' = 'abrv')) %>%
     group_by(team, seas) %>%
     summarise_at(vars(q1_diff:q4_diff), mean) %>%
     ungroup() %>%
@@ -622,14 +622,13 @@ pt_diff_plot <- function(df, team_abrv, pal) {
     separate(qtr, into = c('qtr', 'dif')) %>%
     mutate(qtr = toupper(qtr)) %>% 
     select(-dif) %>%
-    filter(seas == 2018) %>%
+    filter(seas == max(df$seas)) %>%
     ggplot(aes(qtr, scr, fill = pos_neg, label = scr)) +
     geom_bar(stat = 'identity', show.legend = FALSE) +
     geom_label(show.legend = FALSE, 
                color = 'white',
                label.size=.25,) +
-    #facet_wrap(~seas) +
-    labs(x = paste(last_seas, 'Season'),
+    labs(x = paste(max(df$seas), 'Season'),
          y = 'Point Differential per Quarter',
          #caption = 'Regular Season Games Only',
          fill = '') +
@@ -694,3 +693,40 @@ gen_team_output <-
     }
   }
 
+
+# for converting Rmarkdown to mdx. Taken from
+# https://github.com/RobertMyles/writeMDX/blob/master/R/mdx_format.R
+mdx_format <- function(variant = "markdown_strict",
+                      preserve_yaml = TRUE,
+                      dev = 'png',
+                      df_print = "tibble",
+                      fig_width = 7,
+                      fig_height = 5){
+  args <- ""
+  
+  # add post_processor for yaml preservation
+  post_processor <- if (preserve_yaml) {
+    function(metadata, input_file, output_file, clean, verbose) {
+      input_lines <- read_utf8(input_file)
+      partitioned <- partition_yaml_front_matter(input_lines)
+      if (!is.null(partitioned$front_matter)) {
+        output_lines <- c(partitioned$front_matter, "", read_utf8(output_file))
+        write_utf8(output_lines, output_file)
+      }
+      output_file
+    }
+  }
+  
+  # return format
+  rmarkdown:::output_format(
+    knitr = rmarkdown:::knitr_options_html(fig_width, fig_height, fig_retina = NULL, FALSE, dev),
+    pandoc = rmarkdown:::pandoc_options(to = variant,
+                                        from = rmarkdown::from_rmarkdown(),
+                                        args = args,
+                                        ext = '.mdx'),
+    keep_md = FALSE,
+    clean_supporting = FALSE,
+    df_print = df_print,
+    post_processor = post_processor
+  )
+}

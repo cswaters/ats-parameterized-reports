@@ -240,7 +240,7 @@ point_qtr_dist(tmp_def, tm_pal)
 ## Point Differential per Quarter
 
 ```{r pt_diff_plot, echo=FALSE}
-pt_diff_plot(team_df, params$team, tm_pal) 
+pt_diff_plot(team_df, details, params$team, tm_pal) 
 ```
 
 ## Predictive Team Stats

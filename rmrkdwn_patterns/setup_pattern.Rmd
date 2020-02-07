@@ -4,7 +4,8 @@ params:
   set_title: Atlanta Falcons
 title: "`r params$set_title`"
 output:
-  tufte::tufte_html: default
+  md_document:
+    variant: gfm
 ---
 
 ```{r setup, include=FALSE}
@@ -29,7 +30,7 @@ input_ranks <- 'processed_data/nfl-2018-stats-ranks.rds'
 
 team_df <- read_rds(input_stats) %>% 
   filter(team == params$team)
-  # filter(team == 'MIA')
+
 details <- read_rds(input_details) %>% 
   filter(abrv == params$team)
   
@@ -66,5 +67,7 @@ vs_conf <- team_df %>%
   sum_up_records()
 ats <- make_regseas_ats_sum_tbl(team_df)
 home_away_records <- get_location_records(team_df, last_seas)
+
+rm(input_stats, input_ranks, input_bigfour, input_details)
 ```
 
