@@ -673,3 +673,24 @@ make_rank_table <- function(df, stat_names, type){
     ))
 }
 
+make_f_name <- function(team, type) {
+  glue::glue(
+    'teams_output/nfl-{tmname}.{ftype}',
+    tmname = stringr::str_replace_all(team, ' ', '-'),
+    ftype = type
+  )
+}
+
+gen_team_output <-
+  function(team, fullname, output, template = "nfl_template.Rmd") {
+    for (i in seq_along(team)) {
+      rmarkdown::render(
+        template,
+        params = list(team = team[i],
+                      set_title = fullname[i]),
+        output_file = output[i]
+        
+      )
+    }
+  }
+
