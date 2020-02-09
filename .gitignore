@@ -47,4 +47,6 @@ vignettes/*.pdf
 # DS store
 *.DS_Store
 
+# PNG output of markdown export
+*.png
 

@@ -15,3 +15,4 @@ import_draft(
   ) %>% 
   make_template() %>% 
   export_template('nfl_template.Rmd')
+  
