@@ -8,7 +8,7 @@
 | Conference | AFC                             |
 | Division   | West                            |
 | Stadium    | Oakland–Alameda County Coliseum |
-| 2020 Coach | Jon Gruden                      |
+| 2020 Coach | NA                              |
 
 The Oakland Raiders averaged 18.1 points a game last season, the 28th
 ranked offense in the league.The defense gave up 29.2 points on average

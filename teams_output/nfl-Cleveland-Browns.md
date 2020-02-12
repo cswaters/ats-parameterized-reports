@@ -8,7 +8,7 @@
 | Conference | AFC                 |
 | Division   | North               |
 | Stadium    | FirstEnergy Stadium |
-| 2020 Coach | Freddie Kitchens    |
+| 2020 Coach | Kevin Stefanski     |
 
 The Cleveland Browns averaged 22.4 points a game last season, the 20th
 ranked offense in the league.The defense gave up 24.5 points on average

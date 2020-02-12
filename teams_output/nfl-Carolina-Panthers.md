@@ -8,7 +8,7 @@
 | Conference | NFC                     |
 | Division   | South                   |
 | Stadium    | Bank of America Stadium |
-| 2020 Coach | Ron Rivera              |
+| 2020 Coach | Matt Rhule              |
 
 The Carolina Panthers averaged 23.5 points a game last season, the 15th
 ranked offense in the league.The defense gave up 23.9 points on average

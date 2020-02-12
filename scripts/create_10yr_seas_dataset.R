@@ -1,8 +1,11 @@
 source('load_libs.R')
 source('scripts/utils.R')
 
-team <- vroom::vroom('raw_data/team.csv')
-game <- vroom::vroom('raw_data/game.csv')
+f_path <- file.path('~','Dropbox','ArmchairAnalysis','nfl_00-19')
+input_team <- paste0(f_path, '/TEAM.csv')
+input_game <- paste0(f_path, '/GAME.csv')
+team <- vroom::vroom(input_team)
+game <- vroom::vroom(input_game)
 game_details <- vroom::vroom('raw_data/team_details.csv')
 
 neutral_stadiums <- c(

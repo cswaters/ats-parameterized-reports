@@ -8,7 +8,7 @@
 | Conference | NFC            |
 | Division   | East           |
 | Stadium    | AT\&T Stadium  |
-| 2020 Coach | Jason Garrett  |
+| 2020 Coach | Mike McCarthy  |
 
 The Dallas Cowboys averaged 21.2 points a game last season, the 22nd
 ranked offense in the league.The defense gave up 20.2 points on average

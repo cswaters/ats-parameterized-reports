@@ -8,7 +8,7 @@
 | Conference | NFC             |
 | Division   | East            |
 | Stadium    | MetLife Stadium |
-| 2020 Coach | Pat Shurmur     |
+| 2020 Coach | Joe Judge       |
 
 The New York Giants averaged 23.1 points a game last season, the 16th
 ranked offense in the league.The defense gave up 25.8 points on average

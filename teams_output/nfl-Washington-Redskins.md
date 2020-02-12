@@ -8,7 +8,7 @@
 | Conference | NFC                 |
 | Division   | East                |
 | Stadium    | FedExField          |
-| 2020 Coach | Jay Gruden          |
+| 2020 Coach | Ron Rivera          |
 
 The Washington Redskins averaged 17.6 points a game last season, the
 29th ranked offense in the league.The defense gave up 22.4 points on
