@@ -390,7 +390,7 @@ OU
 - [ ] update coaches
 - [x] add rmarkdown template
 - [ ] build static site from 
-- [ ] update 2019 data when available
+- [x] update 2019 data when available
 - [ ] convert to nflscrapr data 
 - [ ] add other sports
 - [ ] improve plots
