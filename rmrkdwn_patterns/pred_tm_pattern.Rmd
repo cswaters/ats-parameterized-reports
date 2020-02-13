@@ -2,13 +2,13 @@
 ## Point Differential per Quarter
 
 ```{r pt_diff_plot, echo=FALSE}
-pt_diff_plot(team_df, details, params$team, tm_pal) 
+pt_diff_plot(team_df, details, 'TEAMNAME', tm_pal) 
 ```
 
 ## Predictive Team Stats
 
 ```{r pred_tm_stats, echo=FALSE, warning=FALSE, message=FALSE}
-clean_up_ranks(rank_data,params$team) %>%
+clean_up_ranks(rank_data,'TEAMNAME') %>%
   make_rank_table(proper_stat_names, type='tm') %>%
   kable(align = 'c')
 ```

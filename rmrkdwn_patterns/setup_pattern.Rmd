@@ -1,11 +1,9 @@
 ---
-params:
-  team: ATL
-  set_title: Atlanta Falcons
-title: "`r params$set_title`"
-output:
-  md_document:
-    variant: gfm
+output: 
+  html_document:
+    toc: true
+    toc_float:
+      collapsed: no
 ---
 
 ```{r setup, include=FALSE}
@@ -26,20 +24,20 @@ input_bigfour <- 'processed_data/big_four_ranks.rds'
 input_ranks <- 'processed_data/nfl-2018-stats-ranks.rds'
 
 
-# team_filter <- partial(.f = filter, team == params$team)
+# team_filter <- partial(.f = filter, team == 'TEAMNAME')
 
 team_df <- read_rds(input_stats) %>% 
-  filter(team == params$team)
+  filter(team == 'TEAMNAME')
 
 details <- read_rds(input_details) %>% 
-  filter(abrv == params$team)
+  filter(abrv == 'TEAMNAME')
   
 tm_pal <- details %>% 
   pull(colors) %>% 
   unlist()
 
 big_four_team <- read_rds(input_bigfour) %>% 
-  filter(team == params$team)
+  filter(team == 'TEAMNAME')
 rank_data <- read_rds(input_ranks)
 
 
@@ -71,3 +69,4 @@ home_away_records <- get_location_records(team_df, last_seas)
 rm(input_stats, input_ranks, input_bigfour, input_details)
 ```
 
+# `r details$name`

@@ -513,7 +513,7 @@ point_qtr_dist <- function(df, pal) {
     geom_bar(stat = 'identity', show.legend = FALSE) +
     scale_fill_manual(values = pal) + 
     theme_ipsum(grid="Y") +
-    labs(x = ' ', y = 'Points per Qtr', caption = '2018 Season')
+    labs(x = ' ', y = 'Points per Qtr', caption = paste0(max(df$seas),' Season'))
 }
 
 sum_up_records <- partial(summarise_at, .vars=vars(ats_w:su_p),.funs=sum)
@@ -674,7 +674,7 @@ make_rank_table <- function(df, stat_names, type){
 
 make_f_name <- function(team, type) {
   glue::glue(
-    'teams_output/nfl-{tmname}.{ftype}',
+    'nfl-{tmname}.{ftype}',
     tmname = stringr::str_replace_all(team, ' ', '-'),
     ftype = type
   )

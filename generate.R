@@ -12,7 +12,6 @@ import_draft(
   "def_stats_pattern" = "rmrkdwn_patterns/def_stats_pattern.Rmd",
   "pred_tm_pattern" = "rmrkdwn_patterns/pred_tm_pattern.Rmd",
   "pred_opp_pattern" = "rmrkdwn_patterns/pred_opp_pattern.Rmd"
-  ) %>% 
+) %>% 
   make_template() %>% 
   export_template('nfl_multi_team.Rmd')
-  

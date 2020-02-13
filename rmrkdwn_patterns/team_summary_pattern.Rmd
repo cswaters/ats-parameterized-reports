@@ -13,4 +13,6 @@ include_graphics(details$logo)
 |Stadium |  `r details$stad`
 |`r year(today())` Coach | `r details$coach`
 
+
 `r get_team_rank_article(details, big_four_team)`
+

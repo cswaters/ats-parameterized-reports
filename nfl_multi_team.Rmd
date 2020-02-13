@@ -1,0 +1,261 @@
+---
+output: html_document
+---
+
+```{r setup, include=FALSE}
+source('load_libs.R')
+theme_set(theme_ipsum_rc())
+update_geom_font_defaults(font_rc_light)
+options(htmltools.dir.version = FALSE)
+opts_chunk$set(fig.retina=2)
+```
+
+```{r load_files, include=FALSE}
+source('load_libs.R')
+source('scripts/utils.R')
+
+input_stats <- 'processed_data/stats_10y_seas.rds'
+input_details <- 'processed_data/team_information.rds'
+input_bigfour <- 'processed_data/big_four_ranks.rds'
+input_ranks <- 'processed_data/nfl-2018-stats-ranks.rds'
+
+
+# team_filter <- partial(.f = filter, team == 'TEAMNAME')
+
+team_df <- read_rds(input_stats) %>% 
+  filter(team == 'TEAMNAME')
+
+details <- read_rds(input_details) %>% 
+  filter(abrv == 'TEAMNAME')
+  
+tm_pal <- details %>% 
+  pull(colors) %>% 
+  unlist()
+
+big_four_team <- read_rds(input_bigfour) %>% 
+  filter(team == 'TEAMNAME')
+rank_data <- read_rds(input_ranks)
+
+
+ats <- make_regseas_ats_sum_tbl(team_df)
+last_seas <- max(team_df$seas)
+bet_types <- list(su = c('W','L','P'),
+                  ats = c('W','L','P'),
+                  ou = c('O', 'U', 'P'))
+proper_stat_names <- tibble(
+    stat = c('f1d', 'fgm', 'td', 'top', 'tovrtds'),
+    statistic = c(
+      'FirstDowns',
+      'FieldGoals',
+      'TouchDowns',
+      'TimeOfPoss',
+      'TDsOffTurnovrs'
+    )
+  )
+
+vs_div <- team_df %>% 
+  get_div_games() %>% 
+  sum_up_records()
+vs_conf <- team_df %>% 
+  get_conf_games() %>% 
+  sum_up_records()
+ats <- make_regseas_ats_sum_tbl(team_df)
+home_away_records <- get_location_records(team_df, last_seas)
+
+rm(input_stats, input_ranks, input_bigfour, input_details)
+```
+
+# `r details$name`
+
+```{r logo, echo=FALSE, out.width = "40%"}
+include_graphics(details$logo)
+```
+
+## Team Info
+
+| |
+| --- | ---
+|Team | `r details$name`
+|Conference |  `r details$conf`
+|Division |  `r details$div`
+|Stadium |  `r details$stad`
+|`r year(today())` Coach | `r details$coach`
+
+`r get_team_rank_article(details, big_four_team)`
+
+## Past 10 Seasons ATS vs All Opponents
+
+*All results for the regular season only.*
+
+```{r five_yr_rslts, echo=FALSE}
+team_df %>% 
+  filter(wk <= 17) %>% 
+  make_results_tbl() %>% 
+  kable(align = 'c')
+```
+
+```{r su_results_plot, echo=FALSE}
+make_results_plot(ats, tm_pal, 'su', bet_types$su) +
+  labs(subtitle = 'Regular Season Results')
+```
+
+```{r ats_results_plot, echo=FALSE}
+make_results_plot(ats, tm_pal, 'ats', bet_types$ats) +
+  labs(subtitle = 'ATS Results')
+```
+
+```{r ou_results_plot, echo=FALSE}
+make_results_plot(ats, tm_pal, 'ou', bet_types$ou) +
+  labs(subtitle = 'Over/Under Results')
+```
+
+## Conference and Division Records
+
+Over the last five seasons, the `r details$name` are `r make_team_records(vs_conf$su_w, vs_conf$su_l, vs_conf$su_p)` against conference opponents and `r make_team_records(vs_div$su_w, vs_div$su_l, vs_div$su_p)` vs division opponents. 
+
+### vs Division Opponents ATS by Team
+
+```{r conf_div_tbl, echo=FALSE}
+team_df %>% 
+  get_div_games() %>% 
+  group_by(opp) %>% 
+  sum_up_records() %>% 
+  ungroup() %>% 
+  div_results_tbl() %>% 
+  kable(align = 'c')
+```
+
+### `r details$conf` Games
+
+```{r conf_game_ats, echo=FALSE}
+team_df %>% 
+  get_conf_games() %>% 
+  make_results_tbl() %>% 
+  kable(align = 'c')
+```
+
+### `r paste(details$conf, details$div)` Games
+
+```{r div_games_ats, echo=FALSE}
+team_df %>% 
+  get_div_games() %>% 
+  make_results_tbl() %>% 
+  kable(align = 'c')
+```
+
+## Team Performance vs ATS & OU Lines
+
+```{r ats_ou_scatter_plot, echo=FALSE}
+p1 <- sprd_vs_mov_plot(team_df, tm_pal) +
+  labs(subtitle = 'Point Spread vs MOV')
+p2 <- tot_vs_score_plot(team_df, tm_pal) +
+  labs(subtitle = 'O/U vs Final Score')
+
+p1 + p2
+```
+
+## ATS Records by Location
+
+```{r by_location_ats, echo=FALSE}
+location_ats_tbl(team_df) %>% 
+  kable(align = 'c')
+```
+
+## Weekly Performance ATS by Week
+
+```{r by_wk_heatmap, echo=FALSE}
+week_heatmap_plot(team_df, tm_pal)
+```
+
+## Team Scoring Last 10 Seasons
+
+```{r ppg_plot, echo=FALSE}
+make_ppg_plot(team_df, tm_pal) +
+  labs(subtitle = 'Team and Opponent Avg Points Scored per Game')
+```
+
+## `r max(team_df$seas)` Season at a Glance
+
+In `r as.character(max(team_df$seas))` the `r details$name`:
+
+`r season_bullet_points(details, home_away_records)`
+
+
+
+## `r last_seas` Schedule and Results
+
+```{r seas_schd, echo=FALSE}
+team_df %>% 
+  get_schd(last_seas) %>% 
+  kable(align = 'c')
+```
+
+
+`r in_close_games(filter(team_df, seas == '2018'), details)`
+`r pythag_proj_txt(team_df, details)`
+
+## Offensive Stats
+
+### Avg Points per Quarter Scored
+
+```{r pts_per_qtr_off, echo=FALSE}
+
+tmp_off <- team_df %>% 
+    select(team, seas, q1p_tm:q4p_tm, q1p_opp:q4p_opp) %>% 
+    gather(qtr, scr, -team, -seas) %>% 
+    group_by(seas, qtr) %>% 
+    summarise(scr = mean(scr)) %>% 
+    ungroup() %>% 
+    separate(qtr, into = c('qtr', 'who'), sep = '_') %>% 
+    mutate(qtr = factor(qtr, 
+                        levels = c('q1p','q2p','q3p','q4p'),
+                        labels = c('Q1','Q2','Q3','Q4'))) %>% 
+    filter(who == 'tm') 
+
+point_qtr_dist(tmp_off, tm_pal)
+```
+
+`r mk_off_tbl(big_four_team)`## Defensive Stats
+
+### Avg Points Allowed per Quarter 
+
+```{r pts_per_qtr_def, echo=FALSE}
+tmp_def <- team_df %>% 
+    select(team, seas, q1p_tm:q4p_tm, q1p_opp:q4p_opp) %>% 
+    gather(qtr, scr, -team, -seas) %>% 
+    group_by(seas, qtr) %>% 
+    summarise(scr = mean(scr)) %>% 
+    ungroup() %>% 
+    separate(qtr, into = c('qtr', 'who'), sep = '_') %>% 
+    mutate(qtr = factor(qtr, 
+                        levels = c('q1p','q2p','q3p','q4p'),
+                        labels = c('Q1','Q2','Q3','Q4'))) %>% 
+    filter(who == 'opp') 
+
+point_qtr_dist(tmp_def, tm_pal)
+```
+
+`r mk_def_tbl(big_four_team)`
+## Point Differential per Quarter
+
+```{r pt_diff_plot, echo=FALSE}
+pt_diff_plot(team_df, details, 'TEAMNAME', tm_pal) 
+```
+
+## Predictive Team Stats
+
+```{r pred_tm_stats, echo=FALSE, warning=FALSE, message=FALSE}
+clean_up_ranks(rank_data,'TEAMNAME') %>%
+  make_rank_table(proper_stat_names, type='tm') %>%
+  kable(align = 'c')
+```
+
+## Predictive Opponent Stats
+
+```{r pred_opp_stats, echo=FALSE, warning=FALSE, message=FALSE}
+clean_up_ranks(rank_data, 'TEAMNAME') %>% 
+make_rank_table(proper_stat_names, 
+                type = 'opp') %>%
+  kable(align = 'c')
+```
+
