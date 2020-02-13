@@ -1,6 +1,8 @@
 # ats-parameterized-reports
 NFL parameterized reports up to 2018. Data via Armchair Analysis
 
+Here's an example of the output: [Miami Dolphins 2018](https://nfl-report-demo.netlify.com/)
+
 ## what it does
 Returns a markdown document with against the spread stats for each team in the NFL.
 
