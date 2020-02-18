@@ -1,5 +1,9 @@
 ---
-output: html_document
+output: 
+  html_document:
+    toc: true
+    toc_float:
+      collapsed: no
 ---
 
 ```{r setup, include=FALSE}
@@ -81,7 +85,9 @@ include_graphics(details$logo)
 |Stadium |  `r details$stad`
 |`r year(today())` Coach | `r details$coach`
 
+
 `r get_team_rank_article(details, big_four_team)`
+
 
 ## Past 10 Seasons ATS vs All Opponents
 
@@ -108,6 +114,16 @@ make_results_plot(ats, tm_pal, 'ats', bet_types$ats) +
 make_results_plot(ats, tm_pal, 'ou', bet_types$ou) +
   labs(subtitle = 'Over/Under Results')
 ```
+
+## Point Spread Distributions
+
+Breakdown of the `r details$name` game spreads.
+
+
+```{r echo=FALSE}
+plot_point_spread_dist(team_df)
+```
+
 
 ## Conference and Division Records
 

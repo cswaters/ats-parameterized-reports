@@ -4,6 +4,7 @@ import_draft(
   "setup_pattern" = "rmrkdwn_patterns/setup_pattern.Rmd",
   "team_summary_pattern" = "rmrkdwn_patterns/team_summary_pattern.Rmd",
   "past_ats_pattern" = "rmrkdwn_patterns/past_ats_pattern.Rmd",
+  "point_spread_dist_pattern" = "rmrkdwn_patterns/point_spread_dist_pattern.Rmd",
   "conf_div_pattern" = "rmrkdwn_patterns/conf_div_pattern.Rmd",
   "past_performance_pattern" = "rmrkdwn_patterns/past_performance_pattern.Rmd",
   "at_a_glance_pattern" = "rmrkdwn_patterns/at_a_glance_pattern.Rmd",

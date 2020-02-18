@@ -384,8 +384,8 @@ pythag_proj_txt <- function(team, tm_details){
   glue(
     '- **The {tm_name} Pythagorean Projection for this season is {pyproj} wins**',
     tm_name = tm_details$teamname,
-    pf = filter(team, seas == 2018) %>% pull(tm_pts) %>% sum(),
-    pa = filter(team, seas == 2018) %>% pull(opp_pts) %>% sum(),
+    pf = filter(team, seas == max(seas)) %>% pull(tm_pts) %>% sum(),
+    pa = filter(team, seas == max(seas)) %>% pull(opp_pts) %>% sum(),
     pyproj = round(pythag_expect(pf, pa, 2.37) * 16, 1)
   )
   
@@ -693,4 +693,51 @@ gen_team_output <-
     }
   }
 
+### For point spread distribution plot
 
+add_ats_location_info <- function(df){
+  df %>% 
+    mutate(
+      home_fav = (location == 'h' & sprv >= 0),
+      road_fav = (location == 'v' & sprv < 0),
+      pk = sprv == 0,
+      home_cover = (location == 'h' & ats_w == 1),
+      home_no_cover = (location == 'h' & ats_l == 1),
+      road_cover = (location == 'v' & ats_w == 1),
+      road_no_cover = (location == 'v' & ats_l == 1),
+      fav_cover = (home_fav + home_cover == 2) | (road_fav + road_cover == 2),
+      dog_cover = (home_fav + road_cover == 2) | (road_fav + home_cover == 2),
+      push = mov == sprv,
+      is_fav = (home_fav + road_fav ) > 0) %>% 
+    mutate(spread_group = case_when( # category of spreads crossing 3/7/10/14
+      abs(sprv) >= 0 & abs(sprv) < 3 ~ "0 to 2.5",
+      abs(sprv) >= 3 & abs(sprv) < 7 ~ "3 to 6.5",
+      abs(sprv) >= 7 & abs(sprv) < 10 ~ "7 to 9.5",
+      abs(sprv) >= 10 & abs(sprv) < 14 ~ "10 to 13.5",
+      TRUE ~ "14+"
+    )) 
+}
+
+
+plot_point_spread_dist <- function(df, seas_yrs=5, pal=tm_pal) {
+  add_ats_location_info(df)  %>%
+    filter(seas >= (seas - seas_yrs)) %>%
+    group_by(spread_group, is_fav) %>%
+    count() %>%
+    ungroup() %>%
+    mutate(is_fav = factor(
+      is_fav,
+      levels = c(FALSE, TRUE),
+      labels = c('As Dog', 'As Fav')
+    )) %>%
+    ggplot(aes(reorder(spread_group, n), n, fill = is_fav)) +
+    geom_col(show.legend = FALSE) +
+    coord_flip() +
+    facet_wrap( ~ is_fav, nrow = 2) +
+    scale_fill_manual(values = pal) +
+    labs(
+      y = 'Number of Games',
+      x = 'Point Spread',
+      subtitle = paste('Last', seas_yrs, 'Seasons')
+    )
+}

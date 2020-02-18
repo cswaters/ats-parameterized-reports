@@ -1,0 +1,10 @@
+
+## Point Spread Distributions
+
+Breakdown of the `r details$name` game spreads.
+
+
+```{r echo=FALSE}
+plot_point_spread_dist(team_df)
+```
+
